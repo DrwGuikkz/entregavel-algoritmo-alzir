@@ -1,5 +1,8 @@
 # Ambientes desenvolvimento de software
 
+ALUNO: JOSÉ GUILHERME PINHEIRO MACHADO
+MATRÍCULA: 2612722
+
 ## Funcionamento da aplicação
 
 A aplicação consiste em um **site web desenvolvido para apresentar e executar diferentes algoritmos de programação**, permitindo ao usuário escolher entre duas linguagens de programação: **Java** e **JavaScript**.

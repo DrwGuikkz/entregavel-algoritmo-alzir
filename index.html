@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Algoritmos Fundamentais - Interface Interativa</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+              dark: '#0f172a',
+              card: '#1e293b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Monaco Editor Loader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script>
+
+  <!-- Estilos Customizados -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Header / Navbar -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <i data-lucide="cpu" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg text-white leading-tight">Algoritmos Fundamentais</h1>
+          <p class="text-xs text-slate-400">Baseado em <a href="https://github.com/DrwGuikkz/Algoritmos-Fundamentais" target="_blank" class="text-indigo-400 hover:underline">DrwGuikkz/Algoritmos-Fundamentais</a></p>
+        </div>
+      </div>
+
+      <!-- Quick Controls -->
+      <div class="flex items-center space-x-3">
+        <div class="bg-slate-800 p-1 rounded-lg flex items-center text-xs font-medium">
+          <button id="lang-js-btn" onclick="switchLanguage('javascript')" class="px-3 py-1.5 rounded-md text-slate-300 transition-all flex items-center space-x-1.5 bg-indigo-600 text-white font-semibold shadow">
+            <span class="w-2 h-2 rounded-full bg-yellow-400 inline-block"></span>
+            <span>JavaScript</span>
+          </button>
+          <button id="lang-java-btn" onclick="switchLanguage('java')" class="px-3 py-1.5 rounded-md text-slate-400 hover:text-slate-200 transition-all flex items-center space-x-1.5">
+            <span class="w-2 h-2 rounded-full bg-orange-500 inline-block"></span>
+            <span>Java</span>
+          </button>
+        </div>
+
+        <a href="https://github.com/DrwGuikkz/Algoritmos-Fundamentais" target="_blank" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">
+          <i data-lucide="github" class="w-5 h-5"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Sidebar / Algorithm Selector (3 cols) -->
+    <aside class="lg:col-span-3 space-y-2">
+      <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-2">Algoritmos</div>
+      
+      <nav id="algo-nav" class="space-y-1.5">
+        <!-- Buttons injected dynamically -->
+      </nav>
+
+      <!-- Complexity Summary Card -->
+      <div class="mt-6 bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center space-x-2 text-indigo-400">
+          <i data-lucide="gauge" class="w-4 h-4"></i>
+          <span class="text-xs font-bold uppercase tracking-wider">Complexidade</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-center text-xs">
+          <div class="bg-slate-800/60 p-2 rounded-lg border border-slate-700/50">
+            <div class="text-slate-400 text-[10px] uppercase">Tempo</div>
+            <div id="metric-time-complexity" class="font-mono font-bold text-amber-400 text-sm mt-0.5">O(n)</div>
+          </div>
+          <div class="bg-slate-800/60 p-2 rounded-lg border border-slate-700/50">
+            <div class="text-slate-400 text-[10px] uppercase">Espaço</div>
+            <div id="metric-space-complexity" class="font-mono font-bold text-emerald-400 text-sm mt-0.5">O(1)</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Content Workspace (9 cols) -->
+    <main class="lg:col-span-9 space-y-6">
+
+      <!-- Header Banner for Selected Algorithm -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-slate-800 rounded-2xl p-6 relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+          <div>
+            <div class="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-medium mb-2">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span id="algo-category">Interativo</span>
+            </div>
+            <h2 id="algo-title" class="text-2xl font-extrabold text-white">Carregando...</h2>
+            <p id="algo-description" class="text-sm text-slate-400 mt-1 max-w-2xl">Descrição do algoritmo selecionado.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls & Parameters Bar -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-semibold text-slate-200 flex items-center space-x-2">
+            <i data-lucide="sliders" class="w-4 h-4 text-indigo-400"></i>
+            <span>Parâmetros de Entrada</span>
+          </h3>
+          <div id="preset-buttons" class="flex items-center space-x-2">
+            <!-- Preset action buttons inserted dynamically -->
+          </div>
+        </div>
+
+        <div id="input-controls-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Dynamic Input Controls -->
+        </div>
+
+        <!-- Execution Control Buttons -->
+        <div class="flex flex-wrap items-center justify-between pt-2 border-t border-slate-800 gap-3">
+          <div class="flex items-center space-x-2">
+            <button id="btn-run" onclick="executeAlgorithm()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium text-sm transition-all shadow-lg shadow-indigo-600/20 flex items-center space-x-2 active:scale-95">
+              <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+              <span>Executar Algoritmo</span>
+            </button>
+            <button id="btn-step" onclick="stepVisualizer()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-sm transition-colors flex items-center space-x-1.5">
+              <i data-lucide="step-forward" class="w-4 h-4"></i>
+              <span>Passo a Passo</span>
+            </button>
+            <button id="btn-reset-vis" onclick="resetVisualizer()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 rounded-lg text-sm transition-colors">
+              <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Speed Slider for Animations -->
+          <div class="flex items-center space-x-3 text-xs text-slate-400">
+            <span>Velocidade:</span>
+            <input type="range" id="speed-range" min="50" max="1000" value="300" step="50" class="w-24 accent-indigo-500 cursor-pointer" onchange="updateSpeed(this.value)" />
+            <span id="speed-label" class="font-mono text-slate-200 w-12">300ms</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Visualizer Canvas Area -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+          <div class="flex items-center space-x-2 text-slate-200 font-semibold text-sm">
+            <i data-lucide="eye" class="w-4 h-4 text-purple-400"></i>
+            <span>Visualização Interativa em Tempo Real</span>
+          </div>
+          <div class="flex items-center space-x-4 text-xs font-mono">
+            <span class="text-slate-400">Passos: <strong id="step-count" class="text-indigo-400 font-bold">0</strong></span>
+            <span class="text-slate-400">Tempo: <strong id="execution-time" class="text-emerald-400 font-bold">0.00 ms</strong></span>
+          </div>
+        </div>
+
+        <div id="visualizer-container" class="min-h-[260px] flex items-center justify-center p-4 bg-slate-950/60 rounded-xl border border-slate-800/60 relative overflow-hidden">
+          <!-- Animated visual nodes, bars, tables, or cards will be rendered here -->
+        </div>
+
+        <!-- Visual Step Logs & Status -->
+        <div id="vis-status" class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs font-mono text-slate-300 min-h-[40px] flex items-center">
+          <span>Pronto para iniciar. Clique em "Executar Algoritmo".</span>
+        </div>
+      </div>
+
+      <!-- Code Editor & Execution Sandbox Panel -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="code-2" class="w-4 h-4 text-indigo-400"></i>
+            <span class="font-semibold text-sm text-slate-200">Código Fonte Interativo & Modificável</span>
+            <span id="current-lang-tag" class="text-[10px] font-bold px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-300 uppercase">JS</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="restoreOriginalCode()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs transition-colors flex items-center space-x-1">
+              <i data-lucide="undo" class="w-3.5 h-3.5"></i>
+              <span>Restaurar Original</span>
+            </button>
+            <button onclick="runUserModifiedCode()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-medium transition-colors shadow flex items-center space-x-1">
+              <i data-lucide="play-circle" class="w-3.5 h-3.5"></i>
+              <span>Rodar Código Modificado</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Monaco Editor Container -->
+        <div class="rounded-xl overflow-hidden border border-slate-800 shadow-inner">
+          <div id="monaco-editor-container" class="h-72 w-full"></div>
+        </div>
+
+        <!-- Execution Console Output -->
+        <div class="space-y-1.5">
+          <div class="text-xs font-medium text-slate-400 flex items-center justify-between">
+            <span class="flex items-center space-x-1">
+              <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+              <span>Console de Saída</span>
+            </span>
+            <button onclick="clearConsole()" class="text-slate-500 hover:text-slate-300 text-[11px]">Limpar</button>
+          </div>
+          <pre id="console-output" class="bg-slate-950 text-slate-300 font-mono text-xs p-3 rounded-lg border border-slate-800/80 max-h-36 overflow-y-auto whitespace-pre-wrap">Aguardando execução do código...</pre>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-900/50 py-4 text-center text-xs text-slate-500 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>Desenvolvido com base no repositório <a href="https://github.com/DrwGuikkz/Algoritmos-Fundamentais" target="_blank" class="text-indigo-400 hover:underline">DrwGuikkz/Algoritmos-Fundamentais</a>.</p>
+      <p class="text-slate-600">Suporte a execução e simulação interativa de Java & JavaScript.</p>
+    </div>
+  </footer>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+</body>
+</html>
